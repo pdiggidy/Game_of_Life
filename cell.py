@@ -1,20 +1,18 @@
 import pygame
 
-# from draw import *
-
-#print(game.width)
-
 class Cell(pygame.sprite.Sprite):
-    def __init__(self, rect, grid_pos: [int, int], obj):
-        super().__init__()
+    def __init__(self, rect, grid_pos: [int, int], game_obj):
+        super().__init__()  # Initialize the pygame sprite class
         self.grid_pos = grid_pos
         self.state = False
         self.future_state = False
         self.rect: pygame.rect = rect
-        self.obj = obj
+        self.obj = game_obj
 
     def update(self):
         live_neighbors = 0
+
+        # This whole function needs to be reworked.
 
         # Normal Case
         if 0 < self.grid_pos[0] < (self.obj.grid_width - 1) and 0 < self.grid_pos[1] < (self.obj.grid_height - 1):
@@ -147,4 +145,8 @@ class Cell(pygame.sprite.Sprite):
             self.future_state = False
         else:
             print(f"Somethings Wrong {live_neighbors}")
-
+        # Rules:
+        # Any Cell with fewer than 2 live neighbors dies
+        # Any live cell with two or three live neighbors lives
+        # Any live cell with more than three live neighbors dies
+        # Any dead cell with 3 live neighbors becomes live

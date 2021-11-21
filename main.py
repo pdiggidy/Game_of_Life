@@ -1,7 +1,3 @@
-import pygame
-import pygame_menu as menu
-
-import game
 from game import *
 
 

@@ -1,21 +1,32 @@
 import pygame
 from cell import *
 
-updated_cells = []
+updated_cells = []  # Using this to store the updated state of the cells.
+
+
+# Previously I was changing the cell state straight away but that way cells get changed to alive or dead
+# before the other cells have been checked, messed everything up.
 
 
 def draw_cells(self):
     cell_list = [cell for cell in self.cells]
-    global updated_cells
+    global updated_cells  # Im pretty sure this doesnt need to be here
     for cell in self.cells:
         if cell.state:
             pygame.draw.rect(self.window, self.white, cell.rect)
 
         else:
             pygame.draw.rect(self.window, self.grey, cell.rect)
-        #print(updated_cells)
 
-def draw_grid(self, grid_width, grid_height):
+
+def draw_grid(self, grid_width, grid_height):  # Do i actually ever use this?
+    """
+    Draws the grid to the screen based on the inputted grid dimensions.
+    :param self:
+    :param grid_width: int
+    :param grid_height: int
+    :return: None
+    """
     for column_num in range(grid_width):
         for row_num in range(grid_height):
             rect = pygame.Rect((column_num * (self.width / grid_width)), (row_num * (self.height / grid_height)),
@@ -27,23 +38,24 @@ def draw_grid(self, grid_width, grid_height):
 class Game:
     def __init__(self):
         pygame.init()
-        self.grid_width = 30  # int(input("Grid width: "))
-        self.grid_height = 30  # int(input("Grid Height: "))
+        self.grid_width = int(input("Grid width: "))  # Could add a test to see if its a valid integer.
+        self.grid_height = int(input("Grid Height: "))
         self.size = self.width, self.height = 700, 700
-        self.overlay_size = ((self.width / self.grid_width) * 1.5, (self.height / self.grid_height) * 1.5)
         self.black, self.white, self.grey = (0, 0, 0), (255, 255, 255), (128, 128, 128)
         self.setup = True
         self.sim = False
         self.running = True
-        self.title = "Game of Life Practice"
+        self.title = "Game of Life"
         self.window = pygame.display.set_mode(self.size)
         pygame.display.set_caption(self.title)
         self.cells = pygame.sprite.Group()
-
-        window = pygame.display.set_mode(self.size)
         pygame.display.set_caption(self.title)
 
     def events(self):
+        """
+        Gets the game events and reacts to them.
+        :return: None
+        """
         ev = pygame.event.get()
         keys = pygame.key.get_pressed()
         if self.setup:
@@ -76,8 +88,11 @@ class Game:
                     cell.state = False
 
     def game_loop(self):
+        """
+        The main game loop with.
+        :return: None
+        """
         global updated_cells
-
         draw_grid(self, self.grid_width, self.grid_height)
         while self.running:
             while self.setup:
@@ -98,7 +113,7 @@ class Game:
                 self.window.fill(self.black)
 
                 for cell in self.cells:
-                    cell.update()
+                    cell.update()    # This part can 100% be optimized
                 for cell in self.cells:
                     cell.state = cell.future_state
                 draw_cells(self)
